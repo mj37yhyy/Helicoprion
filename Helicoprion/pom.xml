@@ -30,11 +30,33 @@
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy</artifactId>
+			<artifactId>groovy-all</artifactId>
 			<version>${groovy.version}</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>online.framework.core</name>
+			<url>http://10.19.2.9:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>release</id>
+			<name>online.framework.core</name>
+			<url>http://10.19.2.9:8081/nexus/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>bin/**</exclude>
+					<exclude>apps/**</exclude>
+					<exclude>conf/**</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -45,6 +67,40 @@
 					<target>1.7</target>
 					<encoding>UTF8</encoding>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<!-- <classpathPrefix>lib/</classpathPrefix> -->
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<finalName>${project.artifactId}-${project.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>${basedir}/tar.gz.xml</descriptor>
+						<descriptor>${basedir}/zip.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
