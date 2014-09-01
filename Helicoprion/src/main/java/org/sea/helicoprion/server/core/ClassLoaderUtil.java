@@ -215,7 +215,8 @@ public class ClassLoaderUtil {
 			// 如果是目录 则继续扫描
 			if (file.isDirectory()) {
 				findAndAddClassesInPackageByFile(
-						packageName + "." + file.getName(),
+						packageName.equals("") ? file.getName() : (packageName
+								+ "." + file.getName()),
 						file.getAbsolutePath(), recursive, classes);
 			} else {
 				// 如果是java类文件 去掉后面的.class 只留下类名
